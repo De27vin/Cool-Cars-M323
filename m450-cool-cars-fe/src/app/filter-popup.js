@@ -27,11 +27,11 @@ const FilterPopup = ({ onApply }) => {
                             <label>
                                 <input
                                     type="radio"
-                                    value="name"
-                                    checked={filterCriteria === "name"}
+                                    value="brand"
+                                    checked={filterCriteria === "brand"}
                                     onChange={(e) => setFilterCriteria(e.target.value)}
                                 />
-                                Name (A-Z)
+                                Brand (A-Z)
                             </label>
                             <label>
                                 <input
@@ -45,11 +45,11 @@ const FilterPopup = ({ onApply }) => {
                             <label>
                                 <input
                                     type="radio"
-                                    value="hp"
-                                    checked={filterCriteria === "hp"}
+                                    value="horsePower"
+                                    checked={filterCriteria === "horsePower"}
                                     onChange={(e) => setFilterCriteria(e.target.value)}
                                 />
-                                HP
+                                Horse power
                             </label>
                         </div>
 

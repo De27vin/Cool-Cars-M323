@@ -9,9 +9,16 @@ import "./globals.css"
 export default function Home() {
     const [cars, setCars] = useState([])
 
+    // Calls for Endpoint /cars/sorted to submit filter values
     const handleFilterApply = (filterOptions) => {
-        console.log("Applied Filter:", filterOptions);
+        const { filterCriteria, order } = filterOptions;
+
+        fetch(`http://localhost:8080/cars/sorted?criteria=${filterCriteria}&order=${order}`)
+            .then((response) => response.json())
+            .then((data) => setCars(data))
+            .catch((error) => console.error("Error fetching sorted cars:", error));
     };
+
 
 
     function buttonHandler() {

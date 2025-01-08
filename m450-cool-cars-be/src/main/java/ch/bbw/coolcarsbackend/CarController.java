@@ -3,8 +3,10 @@ package ch.bbw.coolcarsbackend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,30 +16,42 @@ public class CarController implements ApplicationRunner {
     @Autowired
     private CarRepository carRepository;
 
-    @GetMapping("")  // http://localhost:8080
-    public String helloWorld() {
-        return "Hello World from Backend";
+    // Endpoint for sorted cars
+    @GetMapping("cars/sorted")
+    public List<Car> getSortedCars(
+            @RequestParam String criteria,
+            @RequestParam String order) {
+
+        if (!criteria.matches("brand|model|horsePower") || !order.matches("asc|desc")) {
+            throw new IllegalArgumentException("Invalid sort criteria or order");
+        }
+
+        // Create a Sort object
+        Sort sort = order.equals("asc")
+                ? Sort.by(Sort.Order.asc(criteria))
+                : Sort.by(Sort.Order.desc(criteria));
+
+        // Fetch sorted cars
+        return (List<Car>) carRepository.findAll(sort);
     }
 
+    // Endpoint for all cars without sorting
     @GetMapping("cars")
     public List<Car> getCars() {
-        System.out.println(carRepository.findAll());
+        // Use CrudRepository's findAll() method for unsorted data
         return (List<Car>) carRepository.findAll();
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("App Runner...");
-        carRepository
-                .save(new Car(0, "Dodge", "Challenger", 500));
-        carRepository
-                .findAll()
-                .forEach(System.out::println);
-
+        // Seed initial data
+        carRepository.save(new Car(0, "Dodge", "Challenger", 500));
+        carRepository.save(new Car(0, "Ford", "Mustang", 450));
+        carRepository.save(new Car(0, "Chevrolet", "Camaro", 400));
     }
 
     @GetMapping("cars/{id}")
     public Car getACar(@PathVariable int id) {
-        return new Car(id, "Ford", "Mustang", 450);
+        return carRepository.findById(id).orElse(null);
     }
-};
+}
