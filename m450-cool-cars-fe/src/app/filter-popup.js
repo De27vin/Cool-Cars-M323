@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./globals.css"
 
 const FilterPopup = ({ onApply }) => {
     const [isVisible, setIsVisible] = useState(false);
