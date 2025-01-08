@@ -25,14 +25,6 @@ public class CarController implements ApplicationRunner {
         return (List<Car>) carRepository.findAll();
     }
 
-    @GetMapping
-    public List<Car> getFilteredCars(
-            @RequestParam(required = false) String filterBy,
-            @RequestParam(required = false, defaultValue = "asc") String order
-    ) {
-        return carService.getFilteredCars(filterBy, order);
-    }
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("App Runner...");
@@ -48,4 +40,4 @@ public class CarController implements ApplicationRunner {
     public Car getACar(@PathVariable int id) {
         return new Car(id, "Ford", "Mustang", 450);
     }
-}
+};

@@ -3,7 +3,7 @@
 import {useState} from "react";
 import CarForm from "@/app/carform/page";
 import Link from "next/link";
-import FilterPopup from "./filter-popup";
+import FilterPopup from "../src/app/filter-popup";
 
 export default function Home() {
   const [cars, setCars] = useState([])
