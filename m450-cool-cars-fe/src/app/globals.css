@@ -198,3 +198,61 @@ input[type="radio"] {
   justify-content: center;
 
 }
+
+.search-form {
+  /* Zentriert das Formular grob, nur als Demo */
+  width: 300px;
+  margin: 2rem auto; 
+  display: flex;
+}
+
+/* --- Input-Feld --- */
+.search-form input[type="text"] {
+  flex: 1;                       /* Füllt den verfügbaren Platz */
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #dacece;
+  border: 2px solid #dacece;
+  border-right: 0;               /* Nahtloser Übergang zum Button */
+  border-radius: 4px 0 0 4px;
+  outline: none;                 /* Kein extra Rahmen beim Fokussieren */
+}
+.search-form input[type="text"]::placeholder {
+  color: #aaa;                   /* Placeholder-Farbe */
+}
+
+/* --- Button --- */
+.search-form button {
+  width: 48px;                   /* Button-Breite */
+  background: #ccc;
+  border: 2px solid #ccc;
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s;
+}
+
+/* --- Das "Icon" (Lupen-Symbol / Pfeil) per pseudo-Element --- */
+.search-form button::before {
+  content: "🔍";                 /* Verwendet das Emoji als Symbol */
+  /* Alternativ: content: "\1F50D"; (Unicode für Lupe) */
+  position: absolute;
+  font-size: 1.2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: content 0.3s;      /* Wechselt bei Hover */
+}
+
+/* --- Hover-Effekt: Lupe wird zu Pfeil --- */
+.search-form button:hover::before {
+  content: "→";                  /* Oder "\2192" für Unicode-Pfeil */
+  /* Du kannst hier ggf. noch rotate-Animationen ergänzen */
+}
+
+/* --- Optional: Hover-Farbe anpassen --- */
+.search-form button:hover {
+  background: #bbb;
+}
+

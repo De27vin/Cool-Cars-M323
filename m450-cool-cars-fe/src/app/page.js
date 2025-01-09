@@ -8,6 +8,7 @@ import "./globals.css"
 
 export default function Home() {
     const [cars, setCars] = useState([])
+    const [query, setQuery] = useState("")
 
     // Calls for Endpoint /cars/sorted to submit filter values
     const handleFilterApply = (filterOptions) => {
@@ -19,7 +20,13 @@ export default function Home() {
             .catch((error) => console.error("Error fetching sorted cars:", error));
     };
 
-
+    const handleSearch = (e) => {
+        e.preventDefault()
+        fetch(`http://localhost:8080/cars/search?query=${query}`)
+            .then((response) => response.json())
+            .then((data) => setCars(data))
+            .catch((error) => console.error("Error fetching cars containing search query:", error));
+    };
 
     function buttonHandler() {
         fetch("http://localhost:8080/cars")
@@ -30,6 +37,19 @@ export default function Home() {
     return (
         <div className="App-page-js">
             <h1>Cool Cars Project</h1>
+            
+        <form class="search-form" action="#" method="get"
+        onSubmit={handleSearch}
+        >
+        <input 
+        type="text" 
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search..."
+        aria-label="Suchfeld"
+        />
+        <button type="submit" aria-label="Suche abschicken"></button>
+        </form>
+
             <FilterPopup onApply={handleFilterApply} />
             <button onClick={buttonHandler}>load cars</button>
             <br/>

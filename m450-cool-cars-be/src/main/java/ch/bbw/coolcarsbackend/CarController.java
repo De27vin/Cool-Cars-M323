@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -33,6 +34,18 @@ public class CarController implements ApplicationRunner {
 
         // Fetch sorted cars
         return (List<Car>) carRepository.findAll(sort);
+    }
+
+    @GetMapping("cars/search")
+    public List<Car> search(@RequestParam String query){
+        if (query == null || query.trim().isEmpty()) {
+            return carRepository.findAll();
+        }
+        List<Car> cars = carRepository.findAll();
+        return cars.stream()
+        .filter(car -> car.getBrand().toUpperCase().contains(query.toUpperCase()) ||
+                       car.getModel().toUpperCase().contains(query.toUpperCase()))
+        .collect(Collectors.toList());
     }
 
     // Endpoint for all cars without sorting
