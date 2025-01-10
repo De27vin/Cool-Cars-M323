@@ -10,7 +10,6 @@ export default function Home() {
     const [cars, setCars] = useState([])
     const [query, setQuery] = useState("")
 
-    // Calls for Endpoint /cars/sorted to submit filter values
     const handleFilterApply = (filterOptions) => {
         const { filterCriteria, order } = filterOptions;
 
@@ -54,7 +53,7 @@ export default function Home() {
             <button onClick={buttonHandler}>load cars</button>
             <br/>
             <ul>
-                { cars.map(car =>
+                { cars.map (car =>
                     <li key={car.id}>
                         {car.brand + " " + car.model + ", " + car.horsePower + "HP"}
                     </li>

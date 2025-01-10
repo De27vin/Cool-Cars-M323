@@ -37,16 +37,32 @@ public class CarController implements ApplicationRunner {
     }
 
     @GetMapping("cars/search")
-    public List<Car> search(@RequestParam String query){
+    public List<Car> search(@RequestParam String query) {
         if (query == null || query.trim().isEmpty()) {
-            return carRepository.findAll();
+            return carRepository.findAll();  
         }
+    
         List<Car> cars = carRepository.findAll();
-        return cars.stream()
-        .filter(car -> car.getBrand().toUpperCase().contains(query.toUpperCase()) ||
-                       car.getModel().toUpperCase().contains(query.toUpperCase()))
-        .collect(Collectors.toList());
+        
+        try {
+            int queryInt = Integer.parseInt(query);
+            return cars.stream()
+                .filter(car -> 
+                    car.getBrand().toUpperCase().contains(query.toUpperCase()) || 
+                    car.getModel().toUpperCase().contains(query.toUpperCase()) ||
+                    car.getHorsePower() == queryInt
+                )
+                .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            return cars.stream()
+                .filter(car -> 
+                    car.getBrand().toUpperCase().contains(query.toUpperCase()) || 
+                    car.getModel().toUpperCase().contains(query.toUpperCase())
+                )
+                .collect(Collectors.toList());
+        }
     }
+    
 
     // Endpoint for all cars without sorting
     @GetMapping("cars")
