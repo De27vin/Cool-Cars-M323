@@ -37,37 +37,54 @@ public class CarController implements ApplicationRunner {
     }
 
     @GetMapping("cars/search")
-    public List<Car> search(@RequestParam String query) {
-        if (query == null || query.trim().isEmpty()) {
-            return carRepository.findAll();  
+    public List<Car> search(@RequestParam String query, @RequestParam(defaultValue = "0") int page) {
+        int size = 5;
+        int totalPages = 10;  
+        
+        if (page >= totalPages) {
+            page = totalPages - 1; 
         }
     
-        List<Car> cars = carRepository.findAll();
-        
+        List<Car> cars = carRepository.findAll(); 
+    
+        // If the query is empty, return all cars with pagination
+        if (query == null || query.trim().isEmpty()) {
+            return cars.stream()       
+            .skip(page * size)  
+            .limit(size)      
+            .collect(Collectors.toList());
+        }
+    
+        // Try to parse the query as an integer for horsepower search
         try {
             int queryInt = Integer.parseInt(query);
             return cars.stream()
-                .filter(car -> 
-                    car.getBrand().toUpperCase().contains(query.toUpperCase()) || 
-                    car.getModel().toUpperCase().contains(query.toUpperCase()) ||
-                    car.getHorsePower() == queryInt
-                )
-                .collect(Collectors.toList());
+                    .filter(car -> 
+                        car.getBrand().toUpperCase().contains(query.toUpperCase()) || 
+                        car.getModel().toUpperCase().contains(query.toUpperCase()) ||
+                        car.getHorsePower() == queryInt
+                    )
+                    .skip(page * size) 
+                    .limit(size)        
+                    .collect(Collectors.toList());
         } catch (NumberFormatException e) {
+            // If the query is not a number, filter by brand and model
             return cars.stream()
-                .filter(car -> 
-                    car.getBrand().toUpperCase().contains(query.toUpperCase()) || 
-                    car.getModel().toUpperCase().contains(query.toUpperCase())
-                )
-                .collect(Collectors.toList());
+                    .filter(car -> 
+                        car.getBrand().toUpperCase().contains(query.toUpperCase()) || 
+                        car.getModel().toUpperCase().contains(query.toUpperCase())
+                    )
+                    .skip(page * size)
+                    .limit(size)       
+                    .collect(Collectors.toList());
         }
     }
+
     
 
-    // Endpoint for all cars without sorting
+    // Endpoint for all cars without sorting or filter criteria
     @GetMapping("cars")
     public List<Car> getCars() {
-        // Use CrudRepository's findAll() method for unsorted data
         return (List<Car>) carRepository.findAll();
     }
 
